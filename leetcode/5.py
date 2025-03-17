@@ -1,25 +1,30 @@
 class Solution:
-    def expand(self, s: str, j: int, k: int) -> str:
-        while 0 <= j and k < len(s) and s[j] == s[k]:
-            j -= 1
-            k += 1
-        return s[j + 1: k]
-
-
     def longestPalindrome(self, s: str) -> str:
-        ans = ""
-        for i, c in enumerate(s):
-            sub1 = self.expand(s, i, i)
-            sub2 = self.expand(s, i, i + 1)
+        i, result = 0, ""
+        while i < len(s):
+            j = self.expandToSameCharacters(s, i)
+            palindrome = self.expandPalindrome(s, i, j)
 
-            if len(ans) < len(sub1):
-                ans = sub1
-            if len(ans) < len(sub2):
-                ans = sub2
+            if len(palindrome) > len(result):
+                result = palindrome
 
-        return ans
+            i = j + 1
+
+        return result
+
+    def expandToSameCharacters(self, s: str, i: int) -> int:
+        while i + 1 < len(s) and s[i + 1] == s[i]:
+            i += 1
+        return i
+
+    def expandPalindrome(self, s: str, i: int, j: int) -> str:
+        while i > 0 and j < len(s) - 1 and s[i - 1] == s[j + 1]:
+            i -= 1
+            j += 1
+        return s[i:j+1]
 
 
 sol = Solution()
 print(sol.longestPalindrome("babad"))
+print(sol.longestPalindrome("babab"))
 print(sol.longestPalindrome("cbbd"))
