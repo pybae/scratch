@@ -2,16 +2,14 @@ from typing import List
 
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
-        num_set = {}
+        d = {}
         for i, num in enumerate(nums):
-            num_set[num] = i
-
+            d[num] = i
         for i, num in enumerate(nums):
-            if (target - num) in num_set and num_set[target - num] != i:
-                return [i, num_set[target - num]]
-
+            diff = target - num
+            if diff in d and d[diff] != i:
+                return [i, d[diff]]
         return []
-
 
 
 sol = Solution()
