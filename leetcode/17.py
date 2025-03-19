@@ -1,29 +1,25 @@
 from typing import List
 
 class Solution:
-    digit_to_letters = {
-            "2": "abc",
-            "3": "def",
-            "4": "ghi",
-            "5": "jkl",
-            "6": "mno",
-            "7": "pqrs",
-            "8": "tuv",
-            "9": "wxyz",
-            }
+    digitMap = {
+        "2": ["a", "b", "c"],
+        "3": ["d", "e", "f"],
+        "4": ["g", "h", "i"],
+        "5": ["j", "k", "l"],
+        "6": ["m", "n", "o"],
+        "7": ["p", "q", "r", "s"],
+        "8": ["t", "u", "v"],
+        "9": ["w", "x", "y", "z"]
+    }
 
     def letterCombinations(self, digits: str) -> List[str]:
-        ans = []
-        for digit in digits:
-            if ans:
-                new_ans = []
-                for a in ans:
-                    new_ans += [a + letter for letter in Solution.digit_to_letters[digit]]
-                ans = new_ans
-            else:
-                ans = [letter for letter in Solution.digit_to_letters[digit]]
+        if not digits:
+            return []
 
-        return ans
+        combinations = [""]
+        for digit in digits:
+            combinations = [combination + char for combination in combinations for char in self.digitMap[digit]]
+        return combinations
 
 sol = Solution()
 print(sol.letterCombinations("23"))
