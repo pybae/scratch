@@ -1,34 +1,48 @@
 from typing import List
 
 class Solution:
-    def search(self, nums: List[int], target: int) -> int:
-        return self.search_helper(nums, 0, len(nums) - 1, target)
+    """
+    4, 5, 6, 7, 0, 1, 2
 
-    def search_helper(self, nums: List[int], i: int, j: int, target: int) -> int:
-        if i == j:
-            if target == nums[i]:
-                return i
-            else:
+    7, 0, 1, 2, 4, 5, 6,
+    target is 3
+
+    """
+    def search(self, nums: List[int], target: int) -> int:
+
+        l, r = 0, len(nums) - 1
+        while l <= r:
+            mid = (l + r) // 2
+
+            if nums[mid] == target:
+                return mid
+            if l == r and nums[l] != target:
                 return -1
 
-        mid = ((j - i) // 2) + i
-
-        if nums[mid] == target:
-            return mid
-        elif nums[i] <= nums[mid]:
-            if nums[i] <= target <= nums[mid]:
-                return self.search_helper(nums, i, mid, target)
+            # are we sorted?
+            if nums[l] < nums[r]:
+                # if so, normal binary search
+                if nums[mid] <= target:
+                    l = mid + 1
+                else:
+                    r = mid - 1
             else:
-                return self.search_helper(nums, mid + 1, j, target)
-        else:
-            if nums[mid] <= target <= nums[j]:
-                return self.search_helper(nums, mid, j, target)
-            else:
-                return self.search_helper(nums, i, mid - 1, target)
+                # one of the two sides must be sorted
+                if nums[l] <= nums[mid]:
+                    # left side sorted
+                    if nums[l] <= target <= nums[mid]:
+                        r = mid - 1
+                    else:
+                        l = mid + 1
+                else:
+                    # right side sorted
+                    if nums[mid] <= target <= nums[r]:
+                        l = mid + 1
+                    else:
+                        r = mid - 1
 
+                
+        return -1
 
-# 0, 6
-# 4, 6
-# 
 sol = Solution()
-print(sol.search([1, 3], 0))
+print(sol.search([3, 1], 1))
