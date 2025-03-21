@@ -2,26 +2,23 @@ from typing import List
 
 class Solution:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
-        merged_intervals = []
         intervals.sort(key=lambda x: x[0])
+        merged_intervals = [intervals[0]]
 
-        i = 0
-        while i < len(intervals):
-            interval_start, interval_end = intervals[i][0], intervals[i][1]
-
-            j = i + 1
-            while j < len(intervals) and intervals[j][0] <= interval_end:
-                interval_end = max(interval_end, intervals[j][1])
-                j += 1
-
-            if j - i > 1:
-                merged_intervals.append([interval_start, interval_end])
-                i = j
+        for i in range(1, len(intervals)):
+            if self.overlap(merged_intervals[-1], intervals[i]):
+                merged_intervals[-1] = self.merge_intervals(merged_intervals[-1], intervals[i])
             else:
                 merged_intervals.append(intervals[i])
-                i += 1
 
         return merged_intervals
 
+    def overlap(self, a: List[int], b: List[int]) -> bool:
+        return a[0] <= b[0] <= a[1] or b[0] <= a[1] <= b[1]
+    
+    def merge_intervals(self, a: List[int], b: List[int]) -> List[int]:
+        return [min(a[0], b[0]), max(a[1], b[1])]
+
 sol = Solution()
-print(sol.merge([[1,4],[2, 3]]))
+print(sol.merge([[1,3],[2,6],[8,10],[15,18]]))
+print(sol.merge([[1,4],[4,5]]))
