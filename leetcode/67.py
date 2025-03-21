@@ -1,33 +1,27 @@
+
 class Solution:
     def addBinary(self, a: str, b: str) -> str:
-        i, j = len(a) - 1, len(b) -1
+        a, b = a[::-1], b[::-1]
+        i, carry = 0, 0
 
         result = ""
-        carry = False
-        while i >= 0 or j >= 0:
-            add_i = i >= 0 and a[i] == "1"
-            add_j = j >= 0 and b[j] == "1"
-            
-            ones = int(add_i) + int(add_j) + int(carry)
-            if ones == 3:
-                result = "1" + result
-                carry = True
-            elif ones == 2:
-                result = "0" + result
-                carry = True
-            elif ones == 1:
-                carry = False
-                result = "1" + result
-            else:
-                carry = False
-                result = "0" + result
+        while i < len(a) and i < len(b):
+            res = int(a[i]) + int(b[i]) + carry
+            result += "1" if res % 2 else "0"
+            carry = int(res >= 2)
+            i += 1
 
-            i -= 1
-            j -= 1
+        
+        leftover = a[i:] or b[i:]
+        for num in leftover:
+            res = int(num) + carry
+            result += "1" if res % 2 else "0"
+            carry = int(res >= 2)
 
         if carry:
-            return "1" + result
-        return result
+            result += "1"
+
+        return result[::-1]
 
 sol = Solution()
 print(sol.addBinary("11", "1"))
