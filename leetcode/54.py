@@ -2,33 +2,47 @@ from typing import List
 
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
-        row_start, col_start, row_end, col_end = 0, 0, len(matrix) - 1, len(matrix[0]) - 1
-
         result = []
-        while row_start <= row_end and col_start <= col_end:
-            print(row_start, row_end, col_start, col_end)
-            print(result)
-            for i in range(col_start, col_end + 1):
-                result.append(matrix[row_start][i])
-            row_start += 1
+        for i in range(min(len(matrix), len(matrix[0])) // 2 + 1):
+            result += self.spiral(matrix, i)
+        return result
+    
+    def spiral(self, matrix: List[List[int]], layer: int) -> List[int]:
+        result = []
+        matrix = [row[layer: len(row) - layer] for row in matrix[layer:len(matrix) - layer]]
 
-            for i in range(row_start, row_end + 1):
-                result.append(matrix[i][col_end])
-            col_end -= 1
-
-            if row_start <= row_end:
-                for i in range(col_end, col_start - 1, -1):
-                    result.append(matrix[row_end][i])
-                row_end -= 1
-
-            if col_start <= col_end:
-                for i in range(row_end, row_start - 1, -1):
-                    result.append(matrix[i][col_start])
-                col_start += 1
+        result.extend(matrix[0])
+        result.extend([matrix[i][-1] for i in range(1, len(matrix)) if len(matrix[i]) > 0])
+        result.extend(matrix[-1][-2::-1] if len(matrix) > 1 else [])
+        result.extend([matrix[i][0] for i in range(len(matrix) - 2, 0, -1) if len(matrix[i]) > 0])
 
         return result
 
 sol = Solution()
-print(sol.spiralOrder([[1, 2, 3]]))
-print(sol.spiralOrder([[1,2,3],[4,5,6],[7,8,9]]))
-# print(sol.spiralOrder([[1], [2]]))
+print(sol.spiralOrder([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]))
+
+print(sol.spiralOrder([
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12]
+]))
+
+print(sol.spiralOrder([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+    [10, 11, 12],
+]))
+
+print(sol.spiralOrder([
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+    [13, 14, 15, 16],
+    [17, 18, 19, 20],
+    [21, 22, 23, 24]
+]))
