@@ -2,22 +2,17 @@ from typing import List
 
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        result = []
-        self.dfs(nums, 0, result)
-        return result
+        if not nums:
+            return []
+        if len(nums) == 1:
+            return [nums]
 
-    def dfs(self, nums, i, result):
-        if i == len(nums) - 1:
-            result.append(list(nums))
-            return 
-
-        for j in range(i, len(nums)):
-            nums[i], nums[j] = nums[j], nums[i]
-            self.dfs(nums, i + 1, result)
-            nums[i], nums[j] = nums[j], nums[i]
-
+        permutations = []
+        for i in range(len(nums)):
+            nums[0], nums[i] = nums[i], nums[0]
+            permutations.extend([nums[0]] + x for x in self.permute(nums[1:]))
+            nums[0], nums[i] = nums[i], nums[0]
+        return permutations
 
 sol = Solution()
 print(sol.permute([1, 2, 3]))
-print(sol.permute([0, 1]))
-print(sol.permute([1]))
