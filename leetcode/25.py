@@ -1,51 +1,38 @@
 from typing import Optional
 
-# Definition for singly-linked list.
 class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
         self.next = next
 
 class Solution:
-
     def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
-        prev = head
-        cur = head
 
-        while k > 0 and cur:
-            cur = cur.next
-            k -= 1
+        current = head
+        for i in range(k):
+            if not current:
+                return head
+            current = current.next
 
-        if not cur:
-            # k == n, reverse the list wholly
-            return self.reverse(prev, cur)
+        current = head
+        prev = None
+        i = 0
 
-        #iterate through with some pointer and reverse shit..
+        while current and i < k:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
+            i += 1
 
-        return head
+        head.next = self.reverseKGroup(current, k)
 
-    def reverse(self, prev, cur) -> Optional[ListNode]:
-        node = None
-        while prev:
-            temp = prev.next
-            prev.next = node
-            node = prev
-            prev = temp
-
-        return node
-
-
-
-def printl(l):
-    while l:
-        print(l.val, end="")
-        l = l.next
-    print()
+        return prev
 
 sol = Solution()
-printl(sol.reverse(ListNode(1, ListNode(2, ListNode(3, ListNode(4,
-                                                                ListNode(5))))),
-                   None))
-printl(sol.reverseKGroup(ListNode(1, ListNode(2, ListNode(3, ListNode(4,
-                                                                      ListNode(5))))),
-                         2))
+node = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5)))))
+node = sol.reverseKGroup(node, 2)
+
+while node:
+    print(node.val, end=", ")
+    node = node.next
